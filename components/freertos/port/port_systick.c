@@ -116,6 +116,8 @@ void vPortSetupTimer(void)
  */
 IRAM_ATTR void SysTickIsrHandler(void *arg)
 {
+#ifdef CONFIG_IDF_RTOS_RTTHREAD
+#else
     uint32_t cpuid = xPortGetCoreID();
     systimer_hal_context_t *systimer_hal = (systimer_hal_context_t *)arg;
 #ifdef CONFIG_PM_TRACE
@@ -143,6 +145,7 @@ IRAM_ATTR void SysTickIsrHandler(void *arg)
 
 #ifdef CONFIG_PM_TRACE
     ESP_PM_TRACE_EXIT(TICK, cpuid);
+#endif
 #endif
 }
 

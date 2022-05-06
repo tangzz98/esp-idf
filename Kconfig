@@ -61,6 +61,10 @@ mainmenu "Espressif IoT Development Framework Configuration"
         bool
         default "y" if IDF_TARGET="linux"
 
+    config IDF_RTOS_RTTHREAD
+        bool "RT-THREAD SELECT"
+        default "n" 
+
     config IDF_FIRMWARE_CHIP_ID
         hex
         default 0x0000 if IDF_TARGET_ESP32
