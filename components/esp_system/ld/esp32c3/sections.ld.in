@@ -183,6 +183,25 @@ SECTIONS
     _noinit_end = ABSOLUTE(.);
   } > dram0_0_seg
 
+  .stack_dummy (COPY):
+  {
+      . = ALIGN(8);
+       __STACKSIZE__ = 40960; 
+      __stack_start__ = .;
+      *(.stack*)
+      . += __STACKSIZE__;
+      __stack_cpu0 = .;
+      __stack_end__ = .;
+  } > dram0_0_seg
+
+  .stack_dummy (COPY):
+  {
+      . = ALIGN(8);
+       __HEAPSIZE__ = 40960; 
+      __heap_start__ = .;
+      . += __STACKSIZE__;
+      __heap_end__ = .;
+  } > dram0_0_seg
   /* Shared RAM */
   .dram0.bss (NOLOAD) :
   {
