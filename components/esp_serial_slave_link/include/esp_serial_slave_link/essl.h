@@ -160,7 +160,7 @@ esp_err_t essl_read_reg(essl_handle_t handle, uint8_t add, uint8_t *value_o, uin
  *        - ESP_ERR_NOT_SUPPORTED: Current device does not support this function.
  *        - ESP_ERR_TIMEOUT:       No interrupts before timeout.
  */
-esp_err_t essl_wait_int(essl_handle_t handle, uint32_t wait_ms);
+esp_err_t essl_wait_int(essl_handle_t handle, TickType_t wait_ms);
 
 /** Clear interrupt bits of ESSL slave. All the bits set in the mask will be cleared, while other bits will stay the same.
  *

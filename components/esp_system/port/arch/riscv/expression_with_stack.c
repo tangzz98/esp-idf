@@ -18,6 +18,7 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/portmacro.h"
 
+#if !defined CONFIG_IDF_RTOS_RTTHREAD
 static portMUX_TYPE shared_stack_spinlock = portMUX_INITIALIZER_UNLOCKED;
 static void *current_task_stack = NULL;
 
@@ -45,10 +46,12 @@ static StackType_t *esp_switch_stack_setup(StackType_t *stack, size_t stack_size
 #endif
     return ((StackType_t *)adjusted_top_of_stack);
 }
+#endif
 
 
 void esp_execute_shared_stack_function(SemaphoreHandle_t lock, void *stack, size_t stack_size, shared_stack_function function)
 {
+#if !defined CONFIG_IDF_RTOS_RTTHREAD
     assert(lock);
     assert(stack);
     assert(stack_size > 0 && stack_size >= CONFIG_ESP_MINIMAL_SHARED_STACK_SIZE);
@@ -70,4 +73,7 @@ void esp_execute_shared_stack_function(SemaphoreHandle_t lock, void *stack, size
     portEXIT_CRITICAL(&shared_stack_spinlock);
 
     xSemaphoreGive(lock);
+#else
+    function();
+#endif
 }

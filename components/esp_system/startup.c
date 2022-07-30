@@ -56,6 +56,10 @@
 
 #include "esp_rom_sys.h"
 
+#if CONFIG_IDF_RTOS_RTTHREAD
+#include "rtthread.h"
+#endif
+
 // [refactor-todo] make this file completely target-independent
 #if CONFIG_IDF_TARGET_ESP32
 #include "esp32/clk.h"
@@ -235,6 +239,14 @@ static void do_core_init(void)
        app CPU, and when that is not up yet, the memory will be inaccessible and heap_caps_init may
        fail initializing it properly. */
     heap_caps_init();
+#if CONFIG_IDF_RTOS_RTTHREAD
+#if defined RT_USING_HEAP
+    extern int __heap_start__;
+    extern int __heap_end__;
+    rt_system_heap_init((void *)&__heap_start__, (void *)&__heap_end__);
+#endif
+    rt_system_scheduler_init();
+#endif
 
     // When apptrace module is enabled, there will be SEGGER_SYSVIEW calls in the newlib init.
     // SEGGER_SYSVIEW relies on apptrace module
